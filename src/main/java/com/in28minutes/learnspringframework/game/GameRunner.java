@@ -1,12 +1,13 @@
 package com.in28minutes.learnspringframework.game;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameRunner {
 
     private GameRunnerInterface game;
-    public GameRunner(GameRunnerInterface game){
+    public GameRunner(@Qualifier("PackmanQualifier") GameRunnerInterface game){
         this.game = game;
     }
 
