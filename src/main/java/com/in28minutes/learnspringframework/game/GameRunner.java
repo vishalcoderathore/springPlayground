@@ -7,16 +7,17 @@ import org.springframework.stereotype.Component;
 public class GameRunner {
 
     private GameRunnerInterface game;
-    public GameRunner(@Qualifier("PackmanQualifier") GameRunnerInterface game){
+
+    public GameRunner(@Qualifier("PackmanQualifier") GameRunnerInterface game) {
         this.game = game;
     }
 
-    public void run(){
-            System.out.println("Running game : " + game);
-            game.up();
-            game.down();
-            game.left();
-            game.right();
-            
+    public void run() {
+        System.out.println("Running game : " + game);
+        game.up();
+        game.down();
+        game.left();
+        game.right();
+
     }
 }
