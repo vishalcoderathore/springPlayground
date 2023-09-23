@@ -1,6 +1,4 @@
-package com.in28minutes.learnspringframework.d1;
-
-import java.util.Arrays;
+package com.in28minutes.learnspringframework.examples.d1;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
