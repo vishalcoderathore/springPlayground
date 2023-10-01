@@ -1,0 +1,6 @@
+insert into books(id, name, author) 
+values(1, 'Math', 'R.D. Sharma');
+
+select * from books;
+
+delete from books where id=1;
