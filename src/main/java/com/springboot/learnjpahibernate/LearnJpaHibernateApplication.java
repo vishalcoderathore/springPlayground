@@ -1,13 +1,13 @@
-package com.springboot.learn;
+package com.springboot.learnjpahibernate;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LearnApplication {
+public class LearnJpaHibernateApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LearnApplication.class, args);
+		SpringApplication.run(LearnJpaHibernateApplication.class, args);
 	}
 
 }
