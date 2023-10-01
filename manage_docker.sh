@@ -45,6 +45,15 @@ clear_everything() {
     docker rmi -f $(docker images -q)
 }
 
+# Function to rebuild and start from scratch
+rebuild_and_dev() {
+    clear_everything
+    build_image
+    echo "Starting a fresh container instance..."
+    docker run -d -p 8081:8080 my-spring-app
+    view_running_containers
+}
+
 # Menu to select an operation
 echo "Select an option:"
 echo "1) Build Docker Image"
@@ -52,7 +61,8 @@ echo "2) Run Docker Containers"
 echo "3) View Running Containers"
 echo "4) View All Containers"
 echo "5) Clear Everything (Nuke Mode)"
-read -p "Enter your choice (1/2/3/4/5): " choice
+echo "6) Rebuild & Dev"
+read -p "Enter your choice (1/2/3/4/5/6): " choice
 
 case $choice in
     1) build_image ;;
@@ -60,5 +70,6 @@ case $choice in
     3) view_running_containers ;;
     4) view_all_containers ;;
     5) clear_everything ;;
+    6) rebuild_and_dev ;;
     *) echo "Invalid choice!" ;;
 esac
