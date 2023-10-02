@@ -1,10 +1,10 @@
-package com.springboot.learnjpahibernate;
+package com.learnboot.mywebapp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LearnJpaHibernateApplicationTests {
+class MywebappApplicationTests {
 
 	@Test
 	void contextLoads() {
