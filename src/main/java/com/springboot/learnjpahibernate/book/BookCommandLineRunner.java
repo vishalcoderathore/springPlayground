@@ -33,5 +33,12 @@ public class BookCommandLineRunner implements CommandLineRunner {
 
         // Fetch Book by id
         System.out.println(repository.findById((long) 3));
+
+        // Fetch all by author
+        System.out.println(repository.findByAuthor("Bosco"));
+        System.out.println(repository.findByAuthor("Pete"));
+
+        // Fetch all by book
+        System.out.println(repository.findByName("Learn AWS_with_JPA"));
     }
 }
