@@ -22,5 +22,8 @@ public class BookJdbcCommandLineRunner implements CommandLineRunner {
         // Chemistry and Food should be deleted
         repository.delete((long) 1);
         repository.delete((long) 4);
+
+        // Fetch Book by id
+        System.out.println(repository.findById((long) 3));
     }
 }

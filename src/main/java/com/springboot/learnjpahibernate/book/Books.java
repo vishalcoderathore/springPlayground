@@ -1,5 +1,6 @@
 package com.springboot.learnjpahibernate.book;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +12,11 @@ public class Books {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name="name")
     private String name;
+    
+    @Column(name="author")
     private String author;
 
     // Default constructor
