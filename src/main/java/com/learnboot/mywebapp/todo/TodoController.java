@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class TodoController {
-    public TodoController(TodoService todoService) {
+    public TodoController(TodoService todoService) {    
         this.todoService = todoService;
     }
 
