@@ -39,4 +39,14 @@ public class UserDaoService {
                 .orElse(null);
     }
 
+    public User deleteUser(int id){
+        User user = findUser(id);
+        if(user != null){
+            users.remove(user);
+            return user;
+        }
+        return null;
+        
+    }
+
 }
