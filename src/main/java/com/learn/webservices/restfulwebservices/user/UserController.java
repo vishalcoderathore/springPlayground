@@ -17,11 +17,11 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
-public class UserResource {
+public class UserController {
 
     private UserDaoService userDaoService;
 
-    public UserResource(UserDaoService userDaoService) {
+    public UserController(UserDaoService userDaoService) {
         super();
         this.userDaoService = userDaoService;
     }
@@ -42,27 +42,27 @@ public class UserResource {
         return user;
     }
 
-    @PostMapping
-    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
-        User savedUser = userDaoService.saveUser(user);
+    // @PostMapping
+    // public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+    //     User savedUser = userDaoService.saveUser(user);
 
-        // Create the location header for the newly created resource
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(savedUser.getId())
-                .toUri();
+    //     // Create the location header for the newly created resource
+    //     URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+    //             .path("/{id}")
+    //             .buildAndExpand(savedUser.getId())
+    //             .toUri();
 
-        // Send the location in the response header and return a 201 status code
-        return ResponseEntity.created(location).build();
-    }
+    //     // Send the location in the response header and return a 201 status code
+    //     return ResponseEntity.created(location).build();
+    // }
 
-    @DeleteMapping(path = "/{id}")
-    public void deleteUser(@PathVariable int id) {
-        User user = userDaoService.deleteUser(id);
+    // @DeleteMapping(path = "/{id}")
+    // public void deleteUser(@PathVariable int id) {
+    //     User user = userDaoService.deleteUser(id);
 
-        if (user == null) {
-            throw new UserNotFoundException("id:" + id);
-        }
-    }
+    //     if (user == null) {
+    //         throw new UserNotFoundException("id:" + id);
+    //     }
+    // }
 
 }
