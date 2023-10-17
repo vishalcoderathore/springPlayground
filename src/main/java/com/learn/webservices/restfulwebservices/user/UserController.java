@@ -1,68 +1,71 @@
 package com.learn.webservices.restfulwebservices.user;
 
-import java.net.URI;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import jakarta.validation.Valid;
+import com.learn.webservices.restfulwebservices.jpa.UserRepository;
+
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private UserDaoService userDaoService;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserController(UserDaoService userDaoService) {
-        super();
-        this.userDaoService = userDaoService;
+    // Create a new user
+    @PostMapping
+    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+        User savedUser = userRepository.save(user);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+            .buildAndExpand(savedUser.getId()).toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
+    // Retrieve all users
     @GetMapping
-    public List<User> listAllUsers() {
-        return userDaoService.findAll();
+    public List<User> retrieveAllUsers() {
+        return userRepository.findAll();
     }
 
-    @GetMapping(path = "/{id}")
-    public User showUser(@PathVariable int id) {
-        User user = userDaoService.findUser(id);
+    // Retrieve a user by ID
+    @GetMapping("/{id}")
+    public User retrieveUser(@PathVariable Integer id) {
+        Optional<User> user = userRepository.findById(id);
 
-        if (user == null) {
-            throw new UserNotFoundException("id:" + id);
+        if (!user.isPresent()) {
+            throw new UserNotFoundException("id-" + id);
         }
 
-        return user;
+        return user.get();
     }
 
-    // @PostMapping
-    // public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
-    //     User savedUser = userDaoService.saveUser(user);
+    // Update a user by ID
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable Integer id) {
+        Optional<User> userOptional = userRepository.findById(id);
 
-    //     // Create the location header for the newly created resource
-    //     URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-    //             .path("/{id}")
-    //             .buildAndExpand(savedUser.getId())
-    //             .toUri();
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
 
-    //     // Send the location in the response header and return a 201 status code
-    //     return ResponseEntity.created(location).build();
-    // }
+        user.setId(id);
+        userRepository.save(user);
 
-    // @DeleteMapping(path = "/{id}")
-    // public void deleteUser(@PathVariable int id) {
-    //     User user = userDaoService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 
-    //     if (user == null) {
-    //         throw new UserNotFoundException("id:" + id);
-    //     }
-    // }
-
+    // Delete a user by ID
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Integer id) {
+        userRepository.deleteById(id);
+    }
 }
