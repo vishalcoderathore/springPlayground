@@ -39,7 +39,12 @@ start_app() {
     build_image
     start_mysql
     echo "Starting a fresh Spring Boot container instance..."
-    docker run -d --link mysql-container:mysql -p 8081:8080 my-spring-app
+    # Start the Spring Boot container and capture its ID
+    CONTAINER_ID=$(docker run -d --link mysql-container:mysql -p 8081:8080 my-spring-app)
+
+    # Tail the logs using the container ID
+    echo "Tailing logs for the Spring Boot container..."
+    docker logs --follow $CONTAINER_ID
 }
 
 # Function to show the current status of all Docker containers
