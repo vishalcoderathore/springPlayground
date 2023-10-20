@@ -1,75 +1,79 @@
 #!/bin/bash
 
-# Function to build the Docker image
+# Function to build the Docker image for Spring Boot application
 build_image() {
-    echo "Building Docker image..."
+    echo "Building Docker image for Spring Boot application..."
     docker build -t my-spring-app .
     echo "Build complete."
 }
 
-# Function to run a specified number of Docker containers
-run_containers() {
-    read -p "Enter the number of containers you want to run: " num_containers
-
-    echo "Running $num_containers Docker containers..."
-    for i in $(seq 1 $num_containers)
-    do
-        # Note: Adjusting port mapping for each container.
-        port=$((8080 + $i))
-        echo "Starting container $i on port $port..."
-        docker run -d -p $port:8080 my-spring-app
-    done
+# Function to start the MySQL container
+start_mysql() {
+    echo "Starting MySQL container..."
+    docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=my-secret-pw -e MYSQL_DATABASE=social-media-database -e MYSQL_USER=social-media-user -e MYSQL_PASSWORD=dummypassword -d mysql:8.0
+    echo "MySQL container started."
 }
 
-# Function to view all running containers
-view_running_containers() {
-    echo "Viewing running containers..."
-    docker ps
-}
-
-# Function to view all containers (including stopped)
-view_all_containers() {
-    echo "Viewing all containers..."
-    docker ps -a
-}
-
-# Function to clear everything (nuke mode)
-clear_everything() {
+# Function to stop all running containers
+stop_all_containers() {
     echo "Stopping all containers..."
     docker stop $(docker ps -aq)
-    
+}
+
+# Function to remove all containers
+remove_all_containers() {
     echo "Removing all containers..."
     docker rm $(docker ps -aq)
+}
 
+# Function to remove all images
+remove_all_images() {
     echo "Removing all images..."
     docker rmi -f $(docker images -q)
 }
 
-# Function to rebuild and start from scratch
-rebuild_and_dev() {
-    clear_everything
+# Function to start the app
+start_app() {
+    stop_all_containers
+    remove_all_containers
     build_image
-    echo "Starting a fresh container instance..."
-    docker run -d -p 8081:8080 my-spring-app
-    view_running_containers
+    start_mysql
+    echo "Starting a fresh Spring Boot container instance..."
+    docker run -d --link mysql-container:mysql -p 8081:8080 my-spring-app
+}
+
+# Function to show the current status of all Docker containers
+view_all_containers() {
+    echo "Current status of all Docker containers:"
+    docker ps -a
+}
+
+# Function to restart the app
+restart_app() {
+    echo "Restarting the app..."
+    stop_all_containers
+    remove_all_containers
+    start_app
 }
 
 # Menu to select an operation
 echo "Select an option:"
-echo "1) Build Docker Image"
-echo "2) Run Docker Containers"
-echo "3) View Running Containers"
-echo "4) View All Containers"
-echo "5) Clear Everything (Nuke Mode)"
-echo "6) Rebuild & Dev"
-read -p "Enter your choice (1/2/3/4/5/6): " choice
+echo "1) Start the App"
+echo "2) Stop the App"
+echo "3) Current Status"
+echo "4) Restart the App"
+echo "5) Nuke Mode (Delete Everything)"
+read -p "Enter your choice (1/2/3/4/5): " choice
 
 case $choice in
-    1) build_image ;;
-    2) run_containers ;;
-    3) view_running_containers ;;
-    4) view_all_containers ;;
-    5) clear_everything ;;
-    6) rebuild_and_dev ;;
-    *) echo "Invalid choice!" ;;
+1) start_app ;;
+2) stop_all_containers ;;
+3) view_all_containers ;;
+4) restart_app ;;
+5)
+    stop_all_containers
+    remove_all_containers
+    remove_all_images
+    ;;
+*) echo "Invalid choice!" ;;
 esac

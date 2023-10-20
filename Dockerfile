@@ -1,27 +1,19 @@
-# Use the official maven/Java 17 image to create a build artifact.
-# This is based on Debian and sets up OpenJDK 17 and Maven.
+# Build phase
 FROM maven:3.8.3-openjdk-17-slim AS build
-
-# Set the current working directory inside the image
 WORKDIR /app
-
-# Copy the pom.xml file to download dependencies
 COPY pom.xml ./
-
-# Download the dependencies
 RUN mvn dependency:go-offline -B
-
-# Copy the local code to the container
 COPY src ./src
-
-# Package the application
 RUN mvn package -DskipTests
 
-# Use OpenJDK 17 to run the application
+# Intermediate layer for wait-for-it script
+FROM debian:bullseye-slim as wait-for-it
+RUN apt-get update && apt-get install -y git
+RUN git clone https://github.com/vishnubob/wait-for-it.git
+
+# Final image
 FROM openjdk:17-slim
-
-# Copy the jar file from the build image to the production image
 COPY --from=build /app/target/*.jar app.jar
-
-# Set the startup command to run your application
-CMD ["java", "-jar", "/app.jar"]
+COPY --from=wait-for-it /wait-for-it/wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+CMD ["/bin/sh", "-c", "./wait-for-it.sh mysql-container:3306 -- java -jar /app.jar"]
