@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ../springTodoUI
+    ports:
+      - "3000:5173"  # Default React development port "3000:3000"
+    volumes:
+      - ../springTodoUI:/app  # This mounts your local source code into the container
+      - /app/node_modules  # This is to use the node_modules from inside the container
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Enables polling, which is necessary in some environments for hot-reloading to work
+
+
+  backend:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mydatabase
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword

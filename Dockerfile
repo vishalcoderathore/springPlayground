@@ -1,19 +1,26 @@
-# Build phase
-FROM maven:3.8.3-openjdk-17-slim AS build
+# Use a multi-stage build to compile the Java application and then run it.
+# This way, you don't need Maven or the JDK installed on your host machine, just Docker.
+
+# Stage 1: Build with Maven
+FROM maven:3.8.3-openjdk-17 as build
+
 WORKDIR /app
-COPY pom.xml ./
-RUN mvn dependency:go-offline -B
+
+# Copy your source code and pom.xml into the image
 COPY src ./src
-RUN mvn package -DskipTests
+COPY pom.xml .
 
-# Intermediate layer for wait-for-it script
-FROM debian:bullseye-slim as wait-for-it
-RUN apt-get update && apt-get install -y git
-RUN git clone https://github.com/vishnubob/wait-for-it.git
+# Run Maven to package your application
+RUN mvn package
 
-# Final image
-FROM openjdk:17-slim
+# Stage 2: Run the compiled Java application
+FROM openjdk:17-jdk
+
+# Create a volume point for caching and other needs
+VOLUME /tmp
+
+# Copy the compiled JAR file from the first stage
 COPY --from=build /app/target/*.jar app.jar
-COPY --from=wait-for-it /wait-for-it/wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-CMD ["/bin/sh", "-c", "./wait-for-it.sh mysql-container:3306 -- java -jar /app.jar"]
+
+# Command to run your Java application
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]

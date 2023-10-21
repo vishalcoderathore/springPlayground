@@ -1,13 +1,13 @@
-package com.learn.webservices.restfulwebservices;
+package com.learnspring.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RestfulWebservicesApplication {
+public class FullstackApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RestfulWebservicesApplication.class, args);
+		SpringApplication.run(FullstackApplication.class, args);
 	}
 
 }
