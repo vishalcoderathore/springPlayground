@@ -18,3 +18,7 @@ docker compose ps
 
 # Provide the user with the frontend's URL
 echo -e "\nAccess the frontend application at http://localhost:3000"
+
+# Automatically tail the logs of the Spring backend service
+echo -e "\nShowing logs of the Spring backend service:"
+docker compose logs -f backend
