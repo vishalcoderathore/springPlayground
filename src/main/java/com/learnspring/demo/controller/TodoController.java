@@ -19,6 +19,11 @@ public class TodoController {
     public List<Todo> listTodos(){
         return todoService.listTodos();
     }
+
+    @GetMapping("/{id}")
+    public Todo viewTod(@PathVariable Long id){
+        return todoService.getTodoById(id);
+    }
     
     @PostMapping
     public Todo createTodo(@RequestBody Todo todo) {
