@@ -1,4 +1,4 @@
-package com.learnspring.demo.service;
+package com.learnspring.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.learnspring.demo.model.User;
+import com.learnspring.demo.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
