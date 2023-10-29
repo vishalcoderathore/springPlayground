@@ -1,11 +1,8 @@
 package com.learnspring.demo.service;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.learnspring.demo.exception.TodoNotFoundException;
 import com.learnspring.demo.model.Todo;
 import com.learnspring.demo.repository.TodoRepository;
@@ -35,6 +32,15 @@ public class TodoService {
             throw new TodoNotFoundException("Todo with id " + id + " not found");
         }
         return todoRepository.findById(id).get();
+    }
+
+    public Todo toggleCompletedStatus(Long id, Boolean completed){
+        if (!todoRepository.existsById(id)) {
+            throw new TodoNotFoundException("Todo with id " + id + " not found");
+        }
+        Todo todo = todoRepository.findById(id).get();
+        todo.setCompleted(completed);
+        return todoRepository.save(todo);
     }
 
 }

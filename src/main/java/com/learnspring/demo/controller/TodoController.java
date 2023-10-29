@@ -21,7 +21,7 @@ public class TodoController {
     }
 
     @GetMapping("/{id}")
-    public Todo viewTod(@PathVariable Long id){
+    public Todo viewTodo(@PathVariable Long id){
         return todoService.getTodoById(id);
     }
     
@@ -33,5 +33,10 @@ public class TodoController {
     @DeleteMapping("/{id}")
     public void deleteTodo(@PathVariable Long id) {
         todoService.deleteTodo(id);
+    }
+
+    @PutMapping("/{id}")
+    public Todo toggleTodoCompleted(@RequestBody Boolean completed, @PathVariable Long id){
+        return todoService.toggleCompletedStatus(id, completed);
     }
 }
